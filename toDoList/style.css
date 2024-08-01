@@ -66,6 +66,10 @@ ul li{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition: background-color 0.5s ;
+}
+ul li:hover{
+    background-color: #eaf6ea;
 }
 ul li p{
     flex-grow: 1;
