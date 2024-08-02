@@ -3,6 +3,7 @@ const addBtn = document.getElementById("addBtn");
 const todoList = document.getElementById("todoList");
 let editTodo = null;
 
+//for adding todo
 const addTodo = () => {
   const inputText = inputBox.value.trim();
   if (inputText.length == 0) {
@@ -31,9 +32,12 @@ const addTodo = () => {
 
     todoList.appendChild(li);
     inputBox.value = "";
+
+    saveLocalTodos(inputText);
   }
 };
 
+//for uodating tofo (edit/remove)
 const updateTodo = (e) => {
   if (e.target.innerHTML === "Remove") {
     todoList.removeChild(e.target.parentElement);
@@ -46,5 +50,42 @@ const updateTodo = (e) => {
   }
 };
 
+const saveLocalTodos = (todo) => {
+  let todos = [];
+  if (localStorage.getItem("todos") === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem("todos"));
+  }
+  todos.push(todo);
+  localStorage.setItem("todos", JSON.stringify(todos));
+};
+const getLocalTodos = (todo) => {
+  let todos = [];
+  if (localStorage.getItem("todos") === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem("todos"));
+    todos.forEach((todo) => {
+      let li = document.createElement("li");
+      let p = document.createElement("p");
+      p.innerHTML = todo;
+      li.appendChild(p);
+
+      const editBtn = document.createElement("button");
+      editBtn.innerHTML = "Edit";
+      editBtn.classList.add("btn", "editBtn");
+      li.appendChild(editBtn);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.innerHTML = "Remove";
+      deleteBtn.classList.add("btn", "deleteBtn");
+      li.appendChild(deleteBtn);
+
+      todoList.appendChild(li);
+    });
+  }
+};
+document.addEventListener('DOMContentLoaded',getLocalTodos);
 addBtn.addEventListener("click", addTodo);
 todoList.addEventListener("click", updateTodo);
