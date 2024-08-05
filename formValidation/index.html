@@ -11,30 +11,37 @@
 <body>
     <div class="container">
         <div class="box">
-            <header class="Signup-header">
+            <header class="signup-header">
                 <h1>Signup</h1>
             </header>
-            <main class="Signup-body">
+            <main class="signup-body">
                 <form action="#">
                     <p>
                         <label for="name">Full Name</label>
                         <input type="text" name="" id="name" type="Enter Your Name">
+                        <span id="nameError"></span>
                     </p>
                     <p>
                         <label for="email">Email</label>
-                        <input type="text" name="" id="email" type="Enter Your Email">
+                        <input type="email" name="" id="email" type="Enter Your Email">
                     </p>
                     <p>
                         <label for="password">Password</label>
                         <input type="password" name="" id="password" type="Enter Your Password">
                     </p>
+                    <p>
+                        <input type="submit" value="Create Account" id="submitBtn">
+                    </p>
                 </form>
             </main>
-            <footer></footer>
+            <footer class="signup-footer">
+                <p>Already Have an Account?<a href=""> Login</a></p>
+            </footer>
         </div>
     </div>
 
     <script src="/formValidation/script.js"></script>
+    <script src="https://kit.fontawesome.com/43f21e4a47.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
