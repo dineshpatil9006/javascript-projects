@@ -3,9 +3,15 @@ const questionBox = document.querySelector(".question");
 const choicesBox = document.querySelector(".choices");
 const nextBtn = document.querySelector(".nextBtn");
 const scoreCard = document.querySelector(".scoreCard");
+const alert = document.querySelector(".alert");
+const startBtn = document.querySelector(".startBtn");
+const timer = document.querySelector(".timer");
 
 let curruntQuestionIndex = 0;
 let score = 0;
+let quizOver = false;
+let timeLeft = 15;
+let timerId = null;
 
 const quiz = [
   {
@@ -51,22 +57,32 @@ let showQuestions = () => {
       }
     });
   }
+  if(curruntQuestionIndex<quiz.length){
+    startTimer();
+  }
 };
 
 const checkAnswer = () => {
   const selectedChoice = document.querySelector(".choice.selected");
   if (selectedChoice.textContent === quiz[curruntQuestionIndex].answer) {
-    alert("correct answer");
+    alert.style.backgroundColor = "#008000";
+    displayAlert(`Correct Answer!`);
     score++;
   } else {
-    alert("wrong answer");
+    alert.style.backgroundColor = "#c43138";
+    displayAlert(
+      `Wrong Answer!  ${quiz[curruntQuestionIndex].answer} is Correct Answer`
+    );
   }
-
+  timeLeft = 15;
   curruntQuestionIndex++;
   if (curruntQuestionIndex < quiz.length) {
     showQuestions();
   } else {
     showScore();
+    stopTimer();
+    quizOver = true;
+    timer.style.display = "none";
   }
 };
 
@@ -74,21 +90,72 @@ const showScore = () => {
   questionBox.textContent = "";
   choicesBox.textContent = "";
   scoreCard.textContent = `You scored ${score} out of ${quiz.length}!`;
+  alert.style.backgroundColor = "#1c4ac7";
+  displayAlert("You Have Completed This Quiz!");
   nextBtn.textContent = "Play Again";
-  nextBtn.addEventListener('click',()=>{
-    curruntQuestionIndex = 0;
-    nextBtn.textContent = "Next";
-    scoreCard.textContent = "";
-    showQuestions();
-  });
+
 };
 
-showQuestions();
+const displayAlert = (msg) => {
+  alert.style.display = "block";
+  alert.textContent = msg;
+  setTimeout(() => {
+    alert.style.display = "none";
+  }, 2000);
+};
+
+const startTimer = () => {
+  clearInterval(timerId);
+  timer.textContent = timeLeft;
+
+  const countDown = () => {
+    timer.textContent = timeLeft;
+    timeLeft--;
+    if(timeLeft == 0){
+      const confirmUser = confirm("Time Up !! Do You want to play again");
+      if(confirmUser){
+        timeLeft = 15;
+        startQuiz();
+      }else{
+        startBtn.style.display = "block";
+        container.style.display = "none";
+        return;
+      }
+    }
+  };
+  timerId = setInterval(countDown,1000);
+};
+
+const stopTimer = ()=>{
+  clearInterval(timerId);
+}
+
+const startQuiz = () =>{
+  timeLeft = 15;
+  timer.style.display = "flex";
+  showQuestions();
+}
+
+startBtn.addEventListener("click", () => {
+  startBtn.style.display = "none";
+  container.style.display = "block";
+  startQuiz();
+});
+
 nextBtn.addEventListener("click", () => {
   const selectedChoice = document.querySelector(".choice.selected");
   if (!selectedChoice && nextBtn.textContent == "Next") {
-    alert("Select Your Answer");
+    displayAlert("Select Your Answer");
     return;
+  }
+  if (quizOver) {
+    alert.style.display = "none";
+    nextBtn.textContent = "Next";
+    scoreCard.textContent = "";
+    curruntQuestionIndex = 0;
+    quizOver = false;
+    startQuiz();
+    score = 0;
   } else {
     checkAnswer();
   }
