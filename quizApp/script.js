@@ -81,8 +81,6 @@ const checkAnswer = () => {
   } else {
     showScore();
     stopTimer();
-    quizOver = true;
-    timer.style.display = "none";
   }
 };
 
@@ -93,7 +91,8 @@ const showScore = () => {
   alert.style.backgroundColor = "#1c4ac7";
   displayAlert("You Have Completed This Quiz!");
   nextBtn.textContent = "Play Again";
-
+  quizOver = true;
+  timer.style.display = "none";
 };
 
 const displayAlert = (msg) => {
@@ -130,10 +129,20 @@ const stopTimer = ()=>{
   clearInterval(timerId);
 }
 
+
+const shuffleQuestions = ()=>{
+  for(let i  = quiz.length-1;i>0;i--){
+    const j = Math.floor(Math.random() * (i+1));
+    [quiz[i], quiz[j]] = [quiz[j], quiz[i]];
+  }
+  curruntQuestionIndex = 0;
+  showQuestions();
+}
+
 const startQuiz = () =>{
   timeLeft = 15;
   timer.style.display = "flex";
-  showQuestions();
+  shuffleQuestions();
 }
 
 startBtn.addEventListener("click", () => {
